@@ -1,0 +1,18 @@
+# Rescaled haloscope axion-photon limit to millicharged dark matter
+# Source/run: QUAX-aγ JPA, 2021
+# mass_map = same-tuning-ratio
+# m_phi = (R_TE011_source / 2) m_a point by point
+# assumes the TE011 scan follows the same tuning trajectory as the published source-mode scan
+# source_mode = TM010
+# R_TE011_TM010 = 1.59477
+# f_TM010_ref_Hz = 1.04311e+10
+# f_TE011_ref_Hz = 1.66352e+10
+# constant-mass recast collapsed to the strongest limit for plotting
+# plot_window_half_width_fraction = 0.01
+# radius_m = 0.011
+# length_m = 0.213083
+# C_axion = 0.69
+# C_mDM_TE011 = 0.22
+# m_phi [eV]    epsilon = e_m/e
+3.3944616671654116e-05	1.8796430296828592e-16
+3.4630366503404705e-05	1.8796430296828592e-16
