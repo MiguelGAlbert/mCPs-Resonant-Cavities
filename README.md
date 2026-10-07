@@ -9,7 +9,7 @@ The output files contain two columns: the millicharged-dark-matter mass `m_phi` 
 IMPORTANT: The Axion-photon limits come from https://cajohare.github.io/AxionLimits/, as some of the base code.
 
 Aditional information:
-The cavity parameters used for the computation of the inferred sensitivity are compile in the following table:
+The cavity parameters used for the computation of the inferred sensitivity are compiled in the following table:
 
 <img width="926" height="407" alt="image" src="https://github.com/user-attachments/assets/f555bcd5-58b8-41bc-9b90-58c344fd5078" />
 
