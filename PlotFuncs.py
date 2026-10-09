@@ -1670,31 +1670,24 @@ class AxionPhoton():
         return
 
 
-    def GeomagneticDeflectionLowK(ax,m_min=None,m_max=None,n=300,delta_oplus=1.0,C_A=1.0,\
-                              B_oplus_T=3.0e-5,R_oplus_m=6.371e6,v=1.0e-3,e_charge=0.303,\
-                              edgecolor='dimgray',lw=2.0,edgealpha=1.0,zorder=5,\
-                              label=r'Geomagnetic $kR_\oplus\ll1$',text_on=True,text_label=None,\
-                              text_pos=None,ha='left',va='bottom',clip_on=True,fs=15,text_col=None,\
-                              rotation=0,path_effects=None):
-        T_to_eV2 = 195.0
-        m_to_eVinverse = 5.0677e6
-        B_oplus = B_oplus_T*T_to_eV2
-        R_oplus = R_oplus_m*m_to_eVinverse
-        m_transition = 1.0/(v*R_oplus)
+    def GeomagneticDeflection(ax,m_min=None,m_max=None,n=300,\
+                              edgecolor='gray',lw=2.0,edgealpha=1.0,zorder=5,\
+                              label=r'Geomagnetic deflection',text_on=True,text_label=None,\
+                              text_pos=[1e-8, 1e-20],ha='left',va='bottom',clip_on=True,fs=15,text_col='gray',\
+                              rotation=58.5,path_effects=None):
+    
+        m_ref = 3.0e-6  # 3 micro-eV
     
         if m_min is None:
             m_min = ax.get_xlim()[0]
         if m_max is None:
-            m_max = min(ax.get_xlim()[1],m_transition)
-        else:
-            m_max = min(m_max,m_transition)
-        if m_min>=m_max:
+            m_max = ax.get_xlim()[1]
+        if m_min >= m_max:
             return None
     
         m_phi = logspace(log10(m_min),log10(m_max),n)
-        eps_linear = delta_oplus/(4.0*pi*e_charge*v*m_phi*B_oplus*R_oplus**3)
-        eps_quadratic = (1.0/(e_charge*B_oplus*R_oplus**2))*sqrt(delta_oplus/(pi*C_A))
-        eps_oplus = minimum(eps_linear,eps_quadratic)
+        eps_oplus = 1.0e-15*(m_phi/m_ref)**2
+    
         line, = ax.plot(m_phi,eps_oplus,linestyle='--',color=edgecolor,lw=lw,\
                         alpha=edgealpha,zorder=zorder,label=label)
     
@@ -1708,34 +1701,31 @@ class AxionPhoton():
                 text_pos = [m_phi[i],eps_oplus[i]]
             if path_effects is None:
                 path_effects = line_background(3,'w')
+    
             ax.text(text_pos[0],text_pos[1],text_label,fontsize=fs,color=text_col,\
                     ha=ha,va=va,clip_on=clip_on,rotation=rotation,rotation_mode='anchor',\
                     path_effects=path_effects,zorder=zorder+0.1)
+    
         return line
 
-    def GeomagneticDeflectionHighK(ax,m_min=None,m_max=None,n=300,delta_oplus=1.0,G_gt=1.0,\
-                                   B_oplus_T=3.0e-5,R_oplus_m=6.371e6,v=1.0e-3,e_charge=0.303,\
-                                   edgecolor='dimgray',lw=2.0,edgealpha=1.0,zorder=5,\
-                                   label=r'Geomagnetic $kR_\oplus\gg1$',text_on=True,text_label=None,\
-                                   text_pos=None,ha='left',va='bottom',clip_on=True,fs=15,text_col=None,\
-                                   rotation=0,path_effects=None):
-        T_to_eV2 = 195.0
-        m_to_eVinverse = 5.0677e6
-        B_oplus = B_oplus_T*T_to_eV2
-        R_oplus = R_oplus_m*m_to_eVinverse
-        m_transition = 1.0/(v*R_oplus)
+    def GeomagneticDeflectionWeaker(ax,m_min=None,m_max=None,n=300,\
+                              edgecolor='gray',lw=2.0,edgealpha=1.0,zorder=5,\
+                              label=r'Weaker geomagnetic deflection',text_on=True,text_label=None,\
+                              text_pos=[3e-10, 1e-21],ha='left',va='bottom',clip_on=True,fs=15,text_col='gray',\
+                              rotation=72,path_effects=None):
+
+        m_ref = 3.0e-6  # 3 micro-eV
     
         if m_min is None:
-            m_min = max(ax.get_xlim()[0],m_transition)
-        else:
-            m_min = max(m_min,m_transition)
+            m_min = ax.get_xlim()[0]
         if m_max is None:
             m_max = ax.get_xlim()[1]
-        if m_min>=m_max:
+        if m_min >= m_max:
             return None
     
         m_phi = logspace(log10(m_min),log10(m_max),n)
-        eps_oplus = (delta_oplus/G_gt)*m_phi*v/(e_charge*B_oplus*R_oplus)
+        eps_oplus = 1.0e-5*(m_phi/m_ref)**4
+    
         line, = ax.plot(m_phi,eps_oplus,linestyle='--',color=edgecolor,lw=lw,\
                         alpha=edgealpha,zorder=zorder,label=label)
     
@@ -1749,9 +1739,51 @@ class AxionPhoton():
                 text_pos = [m_phi[i],eps_oplus[i]]
             if path_effects is None:
                 path_effects = line_background(3,'w')
+    
             ax.text(text_pos[0],text_pos[1],text_label,fontsize=fs,color=text_col,\
                     ha=ha,va=va,clip_on=clip_on,rotation=rotation,rotation_mode='anchor',\
                     path_effects=path_effects,zorder=zorder+0.1)
+    
+        return line
+
+    def CavityBound(ax, m_min=None, m_max=None, n=300,
+                    edgecolor='gray', lw=2.0, edgealpha=1.0, zorder=5,
+                    label=r'Cavity Bound', text_on=True, text_label=None,
+                    text_pos=[1e-10, 8e-16], ha='left', va='bottom', clip_on=True,
+                    fs=15, text_col='gray', rotation=0, path_effects=None):
+    
+        if m_min is None:
+            m_min = ax.get_xlim()[0]
+        if m_max is None:
+            m_max = ax.get_xlim()[1]
+    
+        if m_min >= m_max:
+            return None
+    
+        m_phi = logspace(log10(m_min), log10(m_max), n)
+    
+        e_limit = 7.0e-16
+        e_array = np.full_like(m_phi, e_limit)
+    
+        line, = ax.plot(m_phi,e_array,linestyle='--', color=edgecolor,lw=lw,alpha=edgealpha,zorder=zorder,label=label)
+    
+        if text_on:
+            if text_label is None:
+                text_label = label
+    
+            if text_col is None:
+                text_col = edgecolor
+    
+            if text_pos is None:
+                i = int(0.55 * (n - 1))
+                text_pos = [m_phi[i], e_limit]
+    
+            if path_effects is None:
+                path_effects = line_background(3, 'w')
+    
+            ax.text(text_pos[0],text_pos[1], text_label,fontsize=fs,color=text_col,ha=ha,va=va,clip_on=clip_on,
+                    rotation=rotation,rotation_mode='anchor',path_effects=path_effects,zorder=zorder + 0.1)
+    
         return line
 
 #==============================================================================#
